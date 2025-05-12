@@ -36,7 +36,7 @@ def start_game(mode):
     for widget in window.winfo_children():
         widget.destroy()
 
-# Initialize the board and buttons
+# Initialize board and buttons
     board = [[' ' for _ in range(3)] for _ in range(3)]
     buttons = []
     for i in range(3):
@@ -47,6 +47,9 @@ def start_game(mode):
             row_buttons.append(btn)
         buttons.append(row_buttons)
 
+        # Reset Button
+        reset_button = tk.Button(window, text="Restart", font=('consolas',20), command=start_game)
+        reset_button.grid(row=3, column=0, columnspan=3)
 # Function to check if the board is full (draw condition)
 def is_full(board):
     return all(cell in ('X', 'O') for row in board for cell in row)
@@ -59,6 +62,9 @@ def reset_board():
     for i in range(3):
         for j in range(3):
             buttons[i][j].config(text=' ', state=tk.NORMAL)
+
+
+
 
 #Main Window setup
 window = tk.Tk()
@@ -75,8 +81,7 @@ board = []
 #label = (text= player + " turn", font=('consolas',40))
 #label.pack(side="Bottom")
 
-reset_button = tk.Button(window, text="Restart", font=('consolas',20), command=start_game)
-reset_button.grid(row=3, column=0, columnspan=3)
+
 
 start_game("Two Player")
 window.mainloop()
