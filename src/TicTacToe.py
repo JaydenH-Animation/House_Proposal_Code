@@ -1,3 +1,6 @@
+#Title: Tic Tac Toe
+#Creator Jayden House
+
 import tkinter as tk
 from tkinter import messagebox
 import random
@@ -134,7 +137,7 @@ window.title("Tic Tac Toe")
 window.geometry("400x500")  # Window Size
 
 #Main Component for the Game
-players = ['X', 'O']
+players = ['@', '&']
 player = random.choice(players)
 single_player = False
 buttons = []
