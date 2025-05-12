@@ -21,6 +21,18 @@ def empty_spaces():
 def new_game():
     pass
 
+
+# Initialize the board and buttons
+    board = [[' ' for _ in range(3)] for _ in range(3)]
+    buttons = []
+    for i in range(3):
+        row_buttons = []
+        for j in range(3):
+            btn = tk.Button(window, text=' ', font=('Arial', 24), width=5, height=2,)
+            btn.grid(row=i, column=j)
+            row_buttons.append(btn)
+        buttons.append(row_buttons)
+
 #Main Window setup
 window = tk.Tk()
 window.title("Tic Tac Toe")
@@ -33,7 +45,8 @@ single_player = False
 buttons = []
 board = []
 
-
+#label = (text= player + " turn", font=('consolas',40))
+#label.pack(side="Bottom")
 
 reset_button = tk.Button(window, text="Restart", font=('consolas',20), command=new_game)
 reset_button.grid(row=3, column=0, columnspan=3)
