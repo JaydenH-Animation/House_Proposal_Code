@@ -13,14 +13,28 @@ def next_turn():
     pass
 
 def check_winner():
-    pass
+    def check_winner(board, player):
+        for i in range(3):
+            if all(board[i][j] == player for j in range(3)) or all(board[j][i] == player for j in range(3)):
+                return True
+        if all(board[i][i] == player for i in range(3)) or all(board[i][2 - i] == player for i in range(3)):
+            return True
+        return False
+
 
 def empty_spaces():
     pass
 
 def new_game():
     pass
+# Function to start or restart the game in the selected mode
+def start_game(mode):
+    global single_player, board, buttons
+    single_player = mode == "Single Player"
 
+    # Clear the window
+    for widget in window.winfo_children():
+        widget.destroy()
 
 # Initialize the board and buttons
     board = [[' ' for _ in range(3)] for _ in range(3)]
@@ -32,6 +46,19 @@ def new_game():
             btn.grid(row=i, column=j)
             row_buttons.append(btn)
         buttons.append(row_buttons)
+
+# Function to check if the board is full (draw condition)
+def is_full(board):
+    return all(cell in ('X', 'O') for row in board for cell in row)
+
+# Function to reset the board for a new game
+def reset_board():
+    global board, turn
+    turn = 0
+    board = [[' ' for _ in range(3)] for _ in range(3)]
+    for i in range(3):
+        for j in range(3):
+            buttons[i][j].config(text=' ', state=tk.NORMAL)
 
 #Main Window setup
 window = tk.Tk()
@@ -48,8 +75,8 @@ board = []
 #label = (text= player + " turn", font=('consolas',40))
 #label.pack(side="Bottom")
 
-reset_button = tk.Button(window, text="Restart", font=('consolas',20), command=new_game)
+reset_button = tk.Button(window, text="Restart", font=('consolas',20), command=start_game)
 reset_button.grid(row=3, column=0, columnspan=3)
 
-
+start_game("Two Player")
 window.mainloop()
