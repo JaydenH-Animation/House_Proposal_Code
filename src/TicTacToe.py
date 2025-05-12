@@ -25,4 +25,18 @@ def new_game():
 window = tk.Tk()
 window.title("Tic Tac Toe")
 window.geometry("400x500")  # Window Size
+
+#Main Component for the Game
+players = ['X', 'O']
+player = random.choice(players)
+single_player = False
+buttons = []
+board = []
+
+
+
+reset_button = tk.Button(window, text="Restart", font=('consolas',20), command=new_game)
+reset_button.grid(row=3, column=0, columnspan=3)
+
+
 window.mainloop()
