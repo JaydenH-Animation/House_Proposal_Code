@@ -24,6 +24,51 @@ def reset_board():
         for j in range(3):
             buttons[i][j].config(text=' ', state=tk.NORMAL)
 
+# Ai Function to find winning move or block opponent
+def find_best_move(board, player):
+    opponent = 'X' if player == 'O' else 'O'
+
+    # Try to win
+    for i in range(3):
+        for j in range(3):
+            if board[i][j] == ' ':
+                board[i][j] = player
+                if check_winner(board, player):
+                    board[i][j] = ' '
+                    return (i, j)
+                board[i][j] = ' '
+
+    # Block opponent from winning
+    for i in range(3):
+        for j in range(3):
+            if board[i][j] == ' ':
+                board[i][j] = opponent
+                if check_winner(board, opponent):
+                    board[i][j] = ' '
+                    return (i, j)
+                board[i][j] = ' '
+
+    return None
+
+# Function to handle the AI's move
+def ai_move():
+    best_move = find_best_move(board, 'O')
+    if best_move:
+        row, col = best_move
+    else:
+        empty_cells = [(i, j) for i in range(3) for j in range(3) if board[i][j] == ' ']
+        row, col = random.choice(empty_cells)
+
+    board[row][col] = 'O'
+    buttons[row][col].config(text='O')
+
+    if check_winner(board, 'O'):
+        messagebox.showinfo("Game Over", "AI wins!", parent=window)
+        reset_board()
+    elif is_full(board):
+        messagebox.showinfo("Game Over", "It's a draw!", parent=window)
+        reset_board()
+
 # When button is clicked it handle a player's move
 def on_click(row, col):
     global turn
@@ -41,6 +86,10 @@ def on_click(row, col):
             return
 
         turn += 1
+        # Let AI play after human in single player mode
+        if single_player and turn % 2 == 1:
+            ai_move()
+            turn += 1
 
 # Function to start or restart the game in the selected mode
 def start_game(mode):
@@ -79,7 +128,7 @@ def start_game(mode):
 
     reset_board()
 
-#Main Window setup
+#Main Winodw
 window = tk.Tk()
 window.title("Tic Tac Toe")
 window.geometry("400x500")  # Window Size
@@ -91,6 +140,6 @@ single_player = False
 buttons = []
 board = []
 
-#StartGame
+#Start Game
 start_game("Two Player")
 window.mainloop()
