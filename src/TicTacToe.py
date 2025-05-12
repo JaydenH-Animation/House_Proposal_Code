@@ -2,31 +2,46 @@ import tkinter as tk
 from tkinter import messagebox
 import random
 
-# Make the Game Board
-# take Player input
-# Check for Win or Tie
-# Switch the player 
-# Check for win or tie again
-# Add Ai Elements
-
-def next_turn():
-    pass
-
-def check_winner():
-    def check_winner(board, player):
-        for i in range(3):
-            if all(board[i][j] == player for j in range(3)) or all(board[j][i] == player for j in range(3)):
-                return True
-        if all(board[i][i] == player for i in range(3)) or all(board[i][2 - i] == player for i in range(3)):
+# Check if a player has won
+def check_winner(board, player):
+    for i in range(3):
+        if all(board[i][j] == player for j in range(3)) or all(board[j][i] == player for j in range(3)):
             return True
-        return False
+    if all(board[i][i] == player for i in range(3)) or all(board[i][2 - i] == player for i in range(3)):
+        return True
+    return False
 
+# Function to check for draw condition
+def is_full(board):
+    return all(cell in ('X', 'O') for row in board for cell in row)
 
-def empty_spaces():
-    pass
+# Reset the board for a new game
+def reset_board():
+    global board, turn
+    turn = 0
+    board = [[' ' for _ in range(3)] for _ in range(3)]
+    for i in range(3):
+        for j in range(3):
+            buttons[i][j].config(text=' ', state=tk.NORMAL)
 
-def new_game():
-    pass
+# When button is clicked it handle a player's move
+def on_click(row, col):
+    global turn
+    if board[row][col] == ' ':
+        board[row][col] = players[turn % 2]
+        buttons[row][col].config(text=players[turn % 2])
+
+        if check_winner(board, players[turn % 2]):
+            messagebox.showinfo("Game Over", f"Player {players[turn % 2]} wins!", parent=window)
+            reset_board()
+            return
+        elif is_full(board):
+            messagebox.showinfo("Game Over", "It's a draw!", parent=window)
+            reset_board()
+            return
+
+        turn += 1
+
 # Function to start or restart the game in the selected mode
 def start_game(mode):
     global single_player, board, buttons
@@ -36,35 +51,33 @@ def start_game(mode):
     for widget in window.winfo_children():
         widget.destroy()
 
-# Initialize board and buttons
+    # Initialize the board and buttons
     board = [[' ' for _ in range(3)] for _ in range(3)]
     buttons = []
     for i in range(3):
         row_buttons = []
         for j in range(3):
-            btn = tk.Button(window, text=' ', font=('Arial', 24), width=5, height=2,)
+            btn = tk.Button(window, text=' ', font=('Arial', 24), width=5, height=2,
+                            command=lambda i=i, j=j: on_click(i, j))
             btn.grid(row=i, column=j)
             row_buttons.append(btn)
         buttons.append(row_buttons)
 
-        # Reset Button
-        reset_button = tk.Button(window, text="Restart", font=('consolas',20), command=start_game)
-        reset_button.grid(row=3, column=0, columnspan=3)
-# Function to check if the board is full (draw condition)
-def is_full(board):
-    return all(cell in ('X', 'O') for row in board for cell in row)
+    # Reset/play again button
+    reset_button = tk.Button(window, text="Play Again", font=('Arial', 14), command=reset_board)
+    reset_button.grid(row=3, column=0, columnspan=3)
 
-# Function to reset the board for a new game
-def reset_board():
-    global board, turn
-    turn = 0
-    board = [[' ' for _ in range(3)] for _ in range(3)]
-    for i in range(3):
-        for j in range(3):
-            buttons[i][j].config(text=' ', state=tk.NORMAL)
+    # Mode selection buttons
+    mode_frame = tk.Frame(window)
+    mode_frame.grid(row=4, column=0, columnspan=3)
 
+    pvp_button = tk.Button(mode_frame, text="Two Player", font=('Arial', 12), command=lambda: start_game("Two Player"))
+    pvp_button.pack(side=tk.LEFT, padx=5)
 
+    ai_button = tk.Button(mode_frame, text="Single Player", font=('Arial', 12), command=lambda: start_game("Single Player"))
+    ai_button.pack(side=tk.LEFT, padx=5)
 
+    reset_board()
 
 #Main Window setup
 window = tk.Tk()
@@ -78,10 +91,6 @@ single_player = False
 buttons = []
 board = []
 
-#label = (text= player + " turn", font=('consolas',40))
-#label.pack(side="Bottom")
-
-
-
+#StartGame
 start_game("Two Player")
 window.mainloop()
