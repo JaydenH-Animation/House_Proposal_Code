@@ -70,7 +70,7 @@ def ai_move():
         reset_board()
 
 # When button is clicked it handle a player's move
-def on_click(row, col):
+def next_move(row, col):
     global turn
     if board[row][col] == ' ':
         board[row][col] = players[turn % 2]
@@ -107,7 +107,7 @@ def start_game(mode):
         row_buttons = []
         for j in range(3):
             btn = tk.Button(window, text=' ', font=('Arial', 24), width=5, height=2,
-                            command=lambda i=i, j=j: on_click(i, j))
+                            command=lambda i=i, j=j: next_move(i, j))
             btn.grid(row=i, column=j)
             row_buttons.append(btn)
         buttons.append(row_buttons)
